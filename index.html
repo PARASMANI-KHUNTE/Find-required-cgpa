@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CGPA Calculator</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+    <div class="bg-white shadow-md rounded-lg p-8 w-full max-w-lg">
+        <h1 class="text-2xl font-bold mb-6 text-center">CGPA Calculator</h1>
+        <form id="cgpa-form" class="space-y-4">
+            <div>
+                <label for="sem1" class="block text-sm font-medium text-gray-700">Semester 1 CGPA:</label>
+                <input   min="1" max="10"   type="number" id="sem1" step="0.01" required class="mt-1 p-2 border border-gray-300 rounded-md w-full">
+            </div>
+            <div>
+                <label for="sem2" class="block text-sm font-medium text-gray-700">Semester 2 CGPA:</label>
+                <input   min="1" max="10"   type="number" id="sem2" step="0.01" required class="mt-1 p-2 border border-gray-300 rounded-md w-full">
+            </div>
+            <div>
+                <label for="sem3" class="block text-sm font-medium text-gray-700">Semester 3 CGPA:</label>
+                <input  min="1" max="10"    type="number" id="sem3" step="0.01" required class="mt-1 p-2 border border-gray-300 rounded-md w-full">
+            </div>
+            <div class="text-center">
+                <input   min="1" max="10"   type="button" value="Calculate" onclick="calculateCGPA()" class="bg-blue-500 text-white font-bold py-2 px-4 rounded cursor-pointer hover:bg-blue-700">
+            </div>
+        </form>
+        <div id="result" class="mt-6 p-4 bg-gray-50 border border-gray-200 rounded-md"></div>
+    </div>
+
+    <script>
+        function calculateCGPA() {
+            // Get the input values
+            const sem1 = parseFloat(document.getElementById('sem1').value);
+            const sem2 = parseFloat(document.getElementById('sem2').value);
+            const sem3 = parseFloat(document.getElementById('sem3').value);
+
+            // Check if inputs are valid
+            if (isNaN(sem1) || isNaN(sem2) || isNaN(sem3)) {
+                document.getElementById('result').innerText = "Please enter valid CGPA values for all semesters.";
+                return;
+            }
+
+            // Calculate the total CGPA for the first three semesters
+            const totalCGPA = sem1 + sem2 + sem3;
+            const numSemesters = 6;
+            const remainingSemesters = numSemesters - 3;
+
+            // Target CGPA values
+            const targetCGPAs = [7, 8, 9, 10];
+            let resultText = '';
+
+            // Calculate required CGPA for each target
+            targetCGPAs.forEach(target => {
+                const requiredCGPA = (target * numSemesters - totalCGPA) / remainingSemesters;
+                if (requiredCGPA > 10) {
+                    resultText += `<p class="text-red-500">To achieve an overall CGPA of ${target}, it is not possible as the required CGPA exceeds 10.</p>`;
+                } else {
+                    resultText += `<p>To achieve an overall CGPA of <span class="font-bold">${target}</span>, you need to score an average CGPA of <span class="font-bold">${requiredCGPA.toFixed(2)}</span> in the remaining ${remainingSemesters} semesters.</p>`;
+                }
+            });
+
+            document.getElementById('result').innerHTML = resultText;
+        }
+    </script>
+</body>
+</html>
